@@ -33,10 +33,22 @@ class Recipe {
   }
 }
 
-class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
+class _MyAppState extends State<MyApp>
+    with SingleTickerProviderStateMixin, RestorationMixin {
   // Theme control variables
   ThemeMode _themeMode = ThemeMode.light;
   bool darkMode = false;
+
+  // Tab control variables and logic
+  late TabController _tabController;
+  final RestorableInt tabIndex = RestorableInt(0);
+  @override
+  String get restorationId => 'tab_non_scrollable_demo';
+  @override
+  void restoreState(RestorationBucket? oldBucket, bool initialRestore) {
+    registerForRestoration(tabIndex, 'tab_index');
+    _tabController.index = tabIndex.value;
+  }
 
   // Principle recipe list definition
   final List<Recipe> recipeList = [
@@ -120,11 +132,19 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
+    _tabController = TabController(initialIndex: 0, length: 4, vsync: this);
+    _tabController.addListener(() {
+      setState(() {
+        tabIndex.value = _tabController.index;
+      });
+    });
     _updateFavoritesDisplay();
   }
 
   @override
   void dispose() {
+    _tabController.dispose();
+    tabIndex.dispose();
     super.dispose();
   }
 
@@ -158,6 +178,53 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
         ),
         body: homeTab(),
       ),
+    );
+  }
+
+  var tabNames = ['Tab 1', 'Tab 2'];
+  var tabContents = [
+    Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Expanded(
+          child: ListView(
+            scrollDirection: Axis.vertical,
+            shrinkWrap: false,
+            padding: const EdgeInsets.all(8),
+            children: getRecipeCards(recipeList),
+          ),
+        ),
+      ],
+    ),
+    Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Expanded(
+          child: ListView(
+            scrollDirection: Axis.vertical,
+            shrinkWrap: false,
+            padding: const EdgeInsets.all(8),
+            children: getRecipeCards(recipeList),
+          ),
+        ),
+      ],
+    ),
+  ];
+
+  TabBar tabBar() {
+    return TabBar(
+      controller: _tabController,
+      isScrollable: false,
+      tabs: [for (final tab in tabNames) Tab(text: tab)],
+    );
+  }
+
+  TabBarView tabBarView() {
+    return TabBarView(
+      controller: _tabController,
+      children: [
+        for (final tab in tabContents) Column(children: [tab]),
+      ],
     );
   }
 
