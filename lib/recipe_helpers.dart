@@ -17,6 +17,10 @@ class RecipeHelpers {
   Card recipeToCard(Recipe input) {
     Card output = Card(
       child: ListTile(
+        onTap: () {
+          // TODO: add some logic to show the details screen
+          debugPrint('Card tapped.');
+        },
         leading: Icon(Icons.restaurant),
         title: Text(truncateWithEllipsis(20, input.name)),
         subtitle: Text(truncateWithEllipsis(25, input.ingredients)),
