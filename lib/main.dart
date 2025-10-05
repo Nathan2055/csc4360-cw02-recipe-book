@@ -121,7 +121,7 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
     List<Card> cards = [];
 
     for (int i = 0; i < recipeList.length; i++) {
-      cards[i] = RecipeHelpers().recipeToCard(recipeList[i]);
+      cards.add(RecipeHelpers().recipeToCard(recipeList[i]));
     }
     return cards;
   }
