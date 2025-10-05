@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'recipe.dart';
-import 'recipe_helpers.dart';
 
 // Main method
 void main() {
@@ -20,13 +18,18 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
   ThemeMode _themeMode = ThemeMode.light;
   bool darkMode = false;
 
-  // Import recipe list
-  final List<Recipe> recipeList = RecipeHelpers().getRecipeList();
+  // Principle recipe list definition
+  final List<Recipe> recipeList = [
+    Recipe(1, 'name1', 'ingredients1', 'instructions1'),
+    Recipe(2, 'name2', 'ingredients2', 'instructions2'),
+    Recipe(3, 'name3', 'ingredients3', 'instructions3'),
+    Recipe(4, 'name4', 'ingredients4', 'instructions4'),
+  ];
 
-  // Favorites
+  // Favorites list definition
   List favorites = [];
 
-  // Add a favorite
+  // Add a favorites
   // The if checks for and prevents duplicates in the list
   void _addFavorite(int id) {
     setState(() {
@@ -37,6 +40,8 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
   }
 
   // Remove a favorite
+  // While remove() deletes only one instance of the id, the duplicate
+  // check in the _addFavorite() method prevents this from causing issues
   void _removeFavorite(int id) {
     setState(() {
       favorites.remove(id);
@@ -121,12 +126,53 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
   // Create a list of recipe cards
   // TODO: generalize to any List<Recipe>
   List<Card> getRecipeCards() {
-    List<Recipe> recipeList = RecipeHelpers().getRecipeList();
     List<Card> cards = [];
-
     for (int i = 0; i < recipeList.length; i++) {
-      cards.add(RecipeHelpers().recipeToCard(recipeList[i]));
+      cards.add(recipeToCard(recipeList[i]));
     }
     return cards;
+  }
+
+  // Convert a single Recipe into a single Material Card
+  Card recipeToCard(Recipe input) {
+    Card output = Card(
+      child: ListTile(
+        onTap: () {
+          // TODO: add some logic to show the details screen
+          debugPrint('Card tapped.');
+        },
+        leading: Icon(Icons.restaurant),
+        title: Text(truncateWithEllipsis(20, input.name)),
+        subtitle: Text(truncateWithEllipsis(25, input.ingredients)),
+      ),
+    );
+    return output;
+  }
+
+  // Truncate a string to a given length while adding ... to the end
+  // https://stackoverflow.com/a/56187365
+  String truncateWithEllipsis(int cutoff, String myString) {
+    return (myString.length <= cutoff)
+        ? myString
+        : '${myString.substring(0, cutoff)}...';
+  }
+}
+
+class Recipe {
+  int id = -1;
+  String name = '';
+  String ingredients = '';
+  String instructions = '';
+
+  Recipe(
+    int newid,
+    String newname,
+    String newingredients,
+    String newinstructions,
+  ) {
+    id = newid;
+    name = newname;
+    ingredients = newingredients;
+    instructions = newinstructions;
   }
 }
