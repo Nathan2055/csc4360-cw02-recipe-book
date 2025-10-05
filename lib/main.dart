@@ -116,7 +116,7 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
             scrollDirection: Axis.vertical,
             shrinkWrap: false,
             padding: const EdgeInsets.all(8),
-            children: getRecipeCards(),
+            children: getRecipeCards(recipeList),
           ),
         ),
       ],
@@ -124,11 +124,10 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
   }
 
   // Create a list of recipe cards
-  // TODO: generalize to any List<Recipe>
-  List<Card> getRecipeCards() {
+  List<Card> getRecipeCards(List<Recipe> input) {
     List<Card> cards = [];
-    for (int i = 0; i < recipeList.length; i++) {
-      cards.add(recipeToCard(recipeList[i]));
+    for (int i = 0; i < input.length; i++) {
+      cards.add(recipeToCard(input[i]));
     }
     return cards;
   }
