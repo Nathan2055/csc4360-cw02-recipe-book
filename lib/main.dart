@@ -13,6 +13,26 @@ class MyApp extends StatefulWidget {
   State<MyApp> createState() => _MyAppState();
 }
 
+// Recipe object definition
+class Recipe {
+  int id = -1;
+  String name = '';
+  String ingredients = '';
+  String instructions = '';
+
+  Recipe(
+    int newid,
+    String newname,
+    String newingredients,
+    String newinstructions,
+  ) {
+    id = newid;
+    name = newname;
+    ingredients = newingredients;
+    instructions = newinstructions;
+  }
+}
+
 class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
   // Theme control variables
   ThemeMode _themeMode = ThemeMode.light;
@@ -26,8 +46,44 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
     Recipe(4, 'name4', 'ingredients4', 'instructions4'),
   ];
 
-  // Favorites list definition
-  List favorites = [];
+  // Convert a single Recipe into a single Material Card
+  Card recipeToCard(Recipe input) {
+    Card output = Card(
+      child: ListTile(
+        onTap: () {
+          // TODO: add logic here to show the details screen
+          debugPrint('Card tapped.');
+        },
+        leading: Icon(Icons.restaurant),
+        title: Text(truncateWithEllipsis(20, input.name)),
+        subtitle: Text(truncateWithEllipsis(25, input.ingredients)),
+      ),
+    );
+    return output;
+  }
+
+  // Truncate a string to a given length while adding ... to the end
+  // https://stackoverflow.com/a/56187365
+  String truncateWithEllipsis(int cutoff, String myString) {
+    return (myString.length <= cutoff)
+        ? myString
+        : '${myString.substring(0, cutoff)}...';
+  }
+
+  // Create a list of recipe cards
+  // Converts any List<Recipe> to a List<Card> that can then
+  // be passed to an Expanded -> ListView
+  List<Card> getRecipeCards(List<Recipe> input) {
+    List<Card> cards = [];
+    for (int i = 0; i < input.length; i++) {
+      cards.add(recipeToCard(input[i]));
+    }
+    return cards;
+  }
+
+  // Favorites list definitions
+  List favorites = []; // array of recipe ids
+  List<Card> favoritesCards = [];
 
   // Add a favorites
   // The if checks for and prevents duplicates in the list
@@ -36,6 +92,7 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
       if (!favorites.contains(id)) {
         favorites.add(id);
       }
+      _updateFavoritesDisplay();
     });
   }
 
@@ -45,12 +102,25 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
   void _removeFavorite(int id) {
     setState(() {
       favorites.remove(id);
+      _updateFavoritesDisplay();
+    });
+  }
+
+  // Update the displayed List<Card> of favorites
+  void _updateFavoritesDisplay() {
+    setState(() {
+      List<Recipe> temp = [];
+      for (int i = 0; i < favorites.length; i++) {
+        temp.add(recipeList.firstWhere((element) => element.id == i));
+      }
+      favoritesCards = getRecipeCards(temp);
     });
   }
 
   @override
   void initState() {
     super.initState();
+    _updateFavoritesDisplay();
   }
 
   @override
@@ -121,57 +191,5 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
         ),
       ],
     );
-  }
-
-  // Create a list of recipe cards
-  List<Card> getRecipeCards(List<Recipe> input) {
-    List<Card> cards = [];
-    for (int i = 0; i < input.length; i++) {
-      cards.add(recipeToCard(input[i]));
-    }
-    return cards;
-  }
-
-  // Convert a single Recipe into a single Material Card
-  Card recipeToCard(Recipe input) {
-    Card output = Card(
-      child: ListTile(
-        onTap: () {
-          // TODO: add some logic to show the details screen
-          debugPrint('Card tapped.');
-        },
-        leading: Icon(Icons.restaurant),
-        title: Text(truncateWithEllipsis(20, input.name)),
-        subtitle: Text(truncateWithEllipsis(25, input.ingredients)),
-      ),
-    );
-    return output;
-  }
-
-  // Truncate a string to a given length while adding ... to the end
-  // https://stackoverflow.com/a/56187365
-  String truncateWithEllipsis(int cutoff, String myString) {
-    return (myString.length <= cutoff)
-        ? myString
-        : '${myString.substring(0, cutoff)}...';
-  }
-}
-
-class Recipe {
-  int id = -1;
-  String name = '';
-  String ingredients = '';
-  String instructions = '';
-
-  Recipe(
-    int newid,
-    String newname,
-    String newingredients,
-    String newinstructions,
-  ) {
-    id = newid;
-    name = newname;
-    ingredients = newingredients;
-    instructions = newinstructions;
   }
 }
