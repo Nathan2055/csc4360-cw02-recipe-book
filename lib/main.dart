@@ -20,6 +20,9 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
   ThemeMode _themeMode = ThemeMode.light;
   bool darkMode = false;
 
+  // Import recipe list
+  final List<Recipe> recipeList = RecipeHelpers().getRecipeList();
+
   // Favorites
   List favorites = [];
 
