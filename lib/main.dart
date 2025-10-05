@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'recipe.dart';
+import 'recipe_builder.dart';
 
 // Main method
 void main() {
@@ -36,10 +38,7 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
       vsync: this,
     );
 
-    _animation = CurvedAnimation(
-      parent: _controller,
-      curve: Curves.easeInOut,
-    );
+    _animation = CurvedAnimation(parent: _controller, curve: Curves.easeInOut);
 
     _controller.forward();
   }
@@ -83,9 +82,7 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
     return FadeTransition(
       opacity: _animation,
       child: Image.asset(
-        toggleImageState
-            ? 'images/dog-500x600.jpg'
-            : 'images/cat-500x600.jpg',
+        toggleImageState ? 'images/dog-500x600.jpg' : 'images/cat-500x600.jpg',
         width: imageWidth,
         height: imageHeight,
       ),
@@ -100,7 +97,26 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
       themeMode: _themeMode,
       debugShowCheckedModeBanner: false,
       home: Scaffold(
-        appBar: AppBar(title: const Text('My App')),
+        appBar: AppBar(
+          title: Text('Recipe Book'),
+          actions: <Widget>[
+            IconButton(
+              // if dark mode, show sun; if light mode, show moon
+              icon: darkMode
+                  ? const Icon(Icons.sunny)
+                  : const Icon(Icons.mode_night),
+              // same idea for the tooltip text
+              tooltip: darkMode ? 'Light Mode' : 'Dark Mode',
+              onPressed: () {
+                setState(() {
+                  // if on, switch to light mode; if off, switch to dark mode
+                  _themeMode = darkMode ? ThemeMode.light : ThemeMode.dark;
+                  darkMode = !darkMode;
+                });
+              },
+            ),
+          ],
+        ),
         body: Center(child: homeTab()),
       ),
     );
@@ -128,7 +144,10 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
         // Part 2: Image Toggle
         getImage(),
         const SizedBox(height: 8.0),
-        ElevatedButton(onPressed: _toggleImage, child: const Text('Switch Image')),
+        ElevatedButton(
+          onPressed: _toggleImage,
+          child: const Text('Switch Image'),
+        ),
         const SizedBox(height: 8.0),
         ElevatedButton(
           onPressed: _changeTheme,
