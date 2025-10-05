@@ -54,7 +54,7 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
           // TODO: add logic here to show the details screen
           debugPrint('Card tapped.');
         },
-        leading: Icon(Icons.restaurant),
+        leading: const Icon(Icons.restaurant),
         title: Text(truncateWithEllipsis(20, input.name)),
         subtitle: Text(truncateWithEllipsis(25, input.ingredients)),
       ),
@@ -83,9 +83,9 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
 
   // Favorites list definitions
   List favorites = []; // array of recipe ids
-  List<Card> favoritesCards = [];
+  List<Card> favoritesCards = []; // maintained with _updateFavoritesDisplay
 
-  // Add a favorites
+  // Add a favorite
   // The if checks for and prevents duplicates in the list
   void _addFavorite(int id) {
     setState(() {
@@ -137,7 +137,7 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
       debugShowCheckedModeBanner: false,
       home: Scaffold(
         appBar: AppBar(
-          title: Text('Recipe Book'),
+          title: const Text('Recipe Book'),
           actions: <Widget>[
             IconButton(
               // if dark mode, show sun; if light mode, show moon
@@ -156,28 +156,13 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
             ),
           ],
         ),
-        body: listTab(),
+        body: homeTab(),
       ),
     );
   }
 
   // Main interface
   Column homeTab() {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        // Part 1: Counter
-        const Text(
-          'You have pushed the button this many times:',
-          style: TextStyle(fontSize: 16),
-        ),
-        const SizedBox(height: 8.0),
-      ],
-    );
-  }
-
-  // Main interface
-  Column listTab() {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
