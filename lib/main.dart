@@ -132,7 +132,7 @@ class _MyAppState extends State<MyApp>
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(initialIndex: 0, length: 4, vsync: this);
+    _tabController = TabController(initialIndex: 0, length: 2, vsync: this);
     _tabController.addListener(() {
       setState(() {
         tabIndex.value = _tabController.index;
@@ -157,6 +157,7 @@ class _MyAppState extends State<MyApp>
       debugShowCheckedModeBanner: false,
       home: Scaffold(
         appBar: AppBar(
+          automaticallyImplyLeading: false,
           title: const Text('Recipe Book'),
           actions: <Widget>[
             IconButton(
@@ -175,61 +176,35 @@ class _MyAppState extends State<MyApp>
               },
             ),
           ],
+          bottom: tabBar(),
         ),
-        body: homeTab(),
+        body: tabBarView(),
       ),
     );
   }
 
-  var tabNames = ['Tab 1', 'Tab 2'];
-  var tabContents = [
-    Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Expanded(
-          child: ListView(
-            scrollDirection: Axis.vertical,
-            shrinkWrap: false,
-            padding: const EdgeInsets.all(8),
-            children: getRecipeCards(recipeList),
-          ),
-        ),
-      ],
-    ),
-    Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Expanded(
-          child: ListView(
-            scrollDirection: Axis.vertical,
-            shrinkWrap: false,
-            padding: const EdgeInsets.all(8),
-            children: getRecipeCards(recipeList),
-          ),
-        ),
-      ],
-    ),
-  ];
-
+  // Tab title definition
   TabBar tabBar() {
     return TabBar(
       controller: _tabController,
       isScrollable: false,
-      tabs: [for (final tab in tabNames) Tab(text: tab)],
-    );
-  }
-
-  TabBarView tabBarView() {
-    return TabBarView(
-      controller: _tabController,
-      children: [
-        for (final tab in tabContents) Column(children: [tab]),
+      tabs: [
+        Tab(text: 'Home'),
+        Tab(text: 'Favorites'),
       ],
     );
   }
 
-  // Main interface
-  Column homeTab() {
+  // Tab body definition
+  TabBarView tabBarView() {
+    return TabBarView(
+      controller: _tabController,
+      children: [listTab(), favoritesTab()],
+    );
+  }
+
+  // Main list tab body
+  Column listTab() {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -239,6 +214,23 @@ class _MyAppState extends State<MyApp>
             shrinkWrap: false,
             padding: const EdgeInsets.all(8),
             children: getRecipeCards(recipeList),
+          ),
+        ),
+      ],
+    );
+  }
+
+  // Favorites list tab body
+  Column favoritesTab() {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Expanded(
+          child: ListView(
+            scrollDirection: Axis.vertical,
+            shrinkWrap: false,
+            padding: const EdgeInsets.all(8),
+            children: favoritesCards,
           ),
         ),
       ],
