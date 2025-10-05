@@ -20,6 +20,26 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
   ThemeMode _themeMode = ThemeMode.light;
   bool darkMode = false;
 
+  // Favorites
+  List favorites = [];
+
+  // Add a favorite
+  // The if checks for and prevents duplicates in the list
+  void _addFavorite(int id) {
+    setState(() {
+      if (!favorites.contains(id)) {
+        favorites.add(id);
+      }
+    });
+  }
+
+  // Remove a favorite
+  void _removeFavorite(int id) {
+    setState(() {
+      favorites.remove(id);
+    });
+  }
+
   @override
   void initState() {
     super.initState();
@@ -95,6 +115,7 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
     );
   }
 
+  // Create a list of recipe cards
   // TODO: generalize to any List<Recipe>
   List<Card> getRecipeCards() {
     List<Recipe> recipeList = RecipeHelpers().getRecipeList();
