@@ -88,34 +88,14 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
             scrollDirection: Axis.vertical,
             shrinkWrap: false,
             padding: const EdgeInsets.all(8),
-            children: [
-              Card(
-                child: ListTile(
-                  leading: Icon(Icons.file_present),
-                  title: Text('Item 1'),
-                  subtitle: Text('Item 1'),
-                ),
-              ),
-              Card(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    const ListTile(
-                      leading: Icon(Icons.folder_shared),
-                      title: Text('Item 2'),
-                      subtitle: Text('Item 2'),
-                    ),
-                  ],
-                ),
-              ),
-            ],
+            children: getRecipeCards(),
           ),
         ),
       ],
     );
   }
 
-  // TODO: generalize
+  // TODO: generalize to any List<Recipe>
   List<Card> getRecipeCards() {
     List<Recipe> recipeList = RecipeHelpers().getRecipeList();
     List<Card> cards = [];
