@@ -9,9 +9,7 @@ class DetailsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(recipe.name),
-      ),
+      appBar: AppBar(title: Text(recipe.name)),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: SingleChildScrollView(
@@ -38,5 +36,3 @@ class DetailsScreen extends StatelessWidget {
     );
   }
 }
-
-
